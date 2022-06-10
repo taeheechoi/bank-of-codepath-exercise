@@ -6,33 +6,51 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import TransactionDetail from "../TransactionDetail/TransactionDetail";
 
 export default function App() {
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [transactions, setTransactions] = React.useState(null);
+  const [transfers, setTransfers] = React.useState(null);
+  const [error, setError] = React.useState(null);
+  const [filterInputValue, setFilterInputValue] = React.useState("");
+  const [newTransactionForm, setNewTransactionForm] = React.useState({
+    description: "",
+    category: "",
+    amount: 0.00,
+  });
+  const [isCreating, setIsCreating] = React.useState(false)
 
-  const [isLoading, setIsLoading] = React.useState(false)
-  const [transactions, setTransactions] = React.useState([])
-  const [transfers, setTransfers] = React.useState([])
-  const [error, setError] = React.useState(null)
-  const [filterInputValue, setFilterInputValue] = React.useState(null)
-
- 
   return (
-    <div className="App">
+    <div className="app">
       <BrowserRouter>
-        <Navbar filterInputValue={filterInputValue} setFilterInputValue={setFilterInputValue} />
+        <Navbar
+          filterInputValue={filterInputValue}
+          setFilterInputValue={setFilterInputValue}
+        />
         <main>
           <Routes>
-            <Route path="/" element={<Home 
-                transactions={transactions}
-                setTransactions={setTransactions}
-                transfers={transfers}
-                setTransfers={setTransfers}
-                error={error}
-                setError={setError}
-                isLoading={isLoading}
-                setIsLoading={setIsLoading}
-                filterInputValue={filterInputValue}
-                
-                />} />
-            <Route path="/transactions/:transactionId " element={<TransactionDetail />} />
+            <Route
+              path="/"
+              element={
+                <Home
+                  transactions={transactions}
+                  setTransactions={setTransactions}
+                  transfers={transfers}
+                  setTransfers={setTransfers}
+                  error={error}
+                  setError={setError}
+                  isLoading={isLoading}
+                  setIsLoading={setIsLoading}
+                  filterInputValue={filterInputValue}
+                  newTransactionForm={newTransactionForm}
+                  setNewTransactionForm={setNewTransactionForm}
+                  isCreating={isCreating}
+                  setIsCreating={setIsCreating}
+                />
+              }
+            />
+            <Route
+              path="/transactions/:transactionId "
+              element={<TransactionDetail />}
+            />
           </Routes>
         </main>
       </BrowserRouter>

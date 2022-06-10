@@ -38,6 +38,6 @@ export default function Navbar({filterInputValue, setFilterInputValue}) {
 
 export function Logo({path}) {
   return (
-      <Link to={path} ><img src={codepath} alt="logo" /></Link>
+      <Link to={path}  className="logo" ><img src={codepath} alt="logo"/></Link>
   )
 }

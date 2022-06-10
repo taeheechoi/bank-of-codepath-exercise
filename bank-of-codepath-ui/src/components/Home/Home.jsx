@@ -14,23 +14,32 @@ export default function Home({
   isLoading,
   setIsLoading,
   filterInputValue,
+  isCreating,
+  setIsCreating,
+  newTransactionForm,
+  setNewTransactionForm,
 }) {
-  
-
-  const filteredTransactions = transactions?.filter(trans =>
-    filterInputValue ? trans.description.toLowerCase().includes(filterInputValue): transactions
+  const filteredTransactions = transactions?.filter((trans) =>
+    filterInputValue
+      ? trans.description.toLowerCase().includes(filterInputValue.toLowerCase())
+      : transactions
   );
 
-  console.log(filteredTransactions)
-  
+  const filteredTransfers = transfers?.filter((trans) =>
+    filterInputValue
+      ? trans.description.toLowerCase().includes(filterInputValue.toLowerCase())
+      : transfers
+  );
+
   const getTransactions = async () => {
     try {
       const response = await axios.get(
         "http://localhost:3001/bank/transactions"
       );
+
       setTransactions(response.data.transactions);
     } catch (err) {
-      setError(err);
+      setError(err.message);
     }
   };
   const getTransfers = async () => {
@@ -38,7 +47,29 @@ export default function Home({
       const response = await axios.get("http://localhost:3001/bank/transfers");
       setTransfers(response.data.transfers);
     } catch (err) {
-      setError(err);
+      setError(err.message);
+    }
+  };
+
+  const handleOnCreateTransaction = async () => {
+    setIsCreating(true);
+    try {
+      const response = await axios.post(
+        "http://localhost:3001/bank/transactions",
+        {
+          transaction: {
+            ...newTransactionForm,
+          },
+        }
+      );
+
+      await setTransactions([...transactions, response.data.transaction]);
+
+      setNewTransactionForm({'category': "", "description": "", "amount": 0});
+      setIsCreating(false);
+    } catch (err) {
+      setError(err.message);
+      setIsCreating(false);
     }
   };
 
@@ -52,19 +83,27 @@ export default function Home({
       setIsLoading(false);
     };
 
-
-
     fetchData();
   }, []);
-  
+
+  console.log("filteredTransactions", filteredTransactions);
+
   return (
     <div className="home">
-      
-      <AddTransaction />
-      
-      {isLoading ? <h1>Loading...</h1> : <BankActivity filteredTransactions={filteredTransactions} />}
-      {error && <h2 className="error">{error.message}</h2>}
+      <AddTransaction
+        isCreating={isCreating}
+        setIsCreating={setIsCreating}
+        form={newTransactionForm}
+        setForm={setNewTransactionForm}
+        handleOnSubmit={handleOnCreateTransaction}
+      />
 
+      {isLoading ? (
+        <h1>Loading...</h1>
+      ) : (
+        <BankActivity transactions={filteredTransactions} transfers={filteredTransfers} />
+      )}
+      <h2 className="error">{error}</h2>
     </div>
   );
 }
