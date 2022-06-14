@@ -16,7 +16,7 @@ export default function BankActivity({ transactions, transfers }) {
         </div>
         {transactions?.map((transaction) => (
           <Link to={`/transactions/${transaction.id}`}>
-            <TransactionRow transaction={transaction} />
+            <TransactionRow transaction={transaction}/>
           </Link>
         ))}
       </div>
@@ -38,8 +38,8 @@ export default function BankActivity({ transactions, transfers }) {
 
 export function TransactionRow({ transaction = {} }) {
   return (
-    <div className="table-row transaction-row">
-      <span className="col x4">
+    <div className="table-row transaction-row" key={transaction.postedAt}>
+      <span className="col x4" >
         <Arrow amount={transaction.amount} />
         {transaction.description}
       </span>
@@ -52,8 +52,9 @@ export function TransactionRow({ transaction = {} }) {
 
 export function TransferRow({ transfer = {} }) {
   return (
-    <div className="table-row transfer-row">
-      <span className="col x4">
+    <div className="table-row transfer-row" key={transfer.postedAt}>
+ 
+      <span className="col x4" >
         <Arrow amount={transfer.amount} />
         {transfer.memo}
       </span>

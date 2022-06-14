@@ -21,7 +21,7 @@ export default function AddTransaction({form, setForm, handleOnSubmit, isCreatin
   )
 }
 
-export function AddTransactionForm({form, handleOnFormFieldChange, handleOnSubmit, isCreating}) {
+export function AddTransactionForm({form, handleOnFormFieldChange, handleOnSubmit}) {
   
 
   return (

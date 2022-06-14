@@ -6,8 +6,8 @@ import axios from "axios";
 
 export default function Home({
   transactions,
-  setTransactions,
   transfers,
+  setTransactions,
   setTransfers,
   error,
   setError,
@@ -20,14 +20,18 @@ export default function Home({
   setNewTransactionForm,
 }) {
   const filteredTransactions = transactions?.filter((trans) =>
-    filterInputValue
-      ? trans.description.toLowerCase().includes(filterInputValue.toLowerCase())
+    filterInputValue.length
+      ? trans.description
+          ?.toLowerCase()
+          .includes(filterInputValue?.toLowerCase())
       : transactions
   );
 
   const filteredTransfers = transfers?.filter((trans) =>
-    filterInputValue
-      ? trans.description.toLowerCase().includes(filterInputValue.toLowerCase())
+    filterInputValue.length
+      ? trans.description
+          ?.toLowerCase()
+          .includes(filterInputValue?.toLowerCase())
       : transfers
   );
 
@@ -41,14 +45,17 @@ export default function Home({
     } catch (err) {
       setError(err.message);
     }
+    setIsLoading(false);
   };
   const getTransfers = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.get("http://localhost:3001/bank/transfers");
       setTransfers(response.data.transfers);
     } catch (err) {
       setError(err.message);
     }
+    setIsLoading(false);
   };
 
   const handleOnCreateTransaction = async () => {
@@ -64,29 +71,23 @@ export default function Home({
       );
 
       await setTransactions([...transactions, response.data.transaction]);
-
-      setNewTransactionForm({'category': "", "description": "", "amount": 0});
-      setIsCreating(false);
     } catch (err) {
       setError(err.message);
-      setIsCreating(false);
     }
+    setIsCreating(false);
+    setNewTransactionForm({ category: "", description: "", amount: 0 });
   };
 
   React.useEffect(() => {
     const fetchData = async () => {
-      setIsLoading(true);
-
       getTransactions();
       getTransfers();
-
-      setIsLoading(false);
     };
 
     fetchData();
   }, []);
 
-  console.log("filteredTransactions", filteredTransactions);
+  // console.log("filteredTransactions", filteredTransactions);
 
   return (
     <div className="home">
@@ -101,7 +102,10 @@ export default function Home({
       {isLoading ? (
         <h1>Loading...</h1>
       ) : (
-        <BankActivity transactions={filteredTransactions} transfers={filteredTransfers} />
+        <BankActivity
+          transactions={filteredTransactions}
+          transfers={filteredTransfers}
+        />
       )}
       <h2 className="error">{error}</h2>
     </div>

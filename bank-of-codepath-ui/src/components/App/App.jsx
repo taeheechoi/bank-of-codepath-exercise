@@ -8,7 +8,7 @@ import TransactionDetail from "../TransactionDetail/TransactionDetail";
 export default function App() {
   const [isLoading, setIsLoading] = React.useState(false);
   const [transactions, setTransactions] = React.useState(null);
-  const [transfers, setTransfers] = React.useState(null);
+  const [transfers, setTransfers] = React.useState();
   const [error, setError] = React.useState(null);
   const [filterInputValue, setFilterInputValue] = React.useState("");
   const [newTransactionForm, setNewTransactionForm] = React.useState({
@@ -48,7 +48,7 @@ export default function App() {
               }
             />
             <Route
-              path="/transactions/:transactionId "
+              path="transactions/:transactionId"
               element={<TransactionDetail />}
             />
           </Routes>
