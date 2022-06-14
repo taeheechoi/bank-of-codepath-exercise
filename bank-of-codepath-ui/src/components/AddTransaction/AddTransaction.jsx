@@ -4,12 +4,13 @@ import "./AddTransaction.css"
 export default function AddTransaction({form, setForm, handleOnSubmit, isCreating}) {
   const handleOnFormFieldChange = (e) => {
     const {name, value} = e.target
-    setForm((prevState)=>{
-      return {
-        ...prevState,
-        [name]: value
-      }
-    })
+    // setForm((prevState)=>{
+    //   return {
+    //     ...prevState,
+    //     [name]: value
+    //   }
+    // })
+    setForm({...form, [name]: value})
   }
 
   return (

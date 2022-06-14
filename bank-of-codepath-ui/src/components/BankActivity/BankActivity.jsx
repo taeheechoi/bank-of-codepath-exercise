@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate  } from "react-router-dom";
 import { formatDate, formatAmount } from "../../utils/format";
 import "./BankActivity.css";
 
@@ -16,7 +16,7 @@ export default function BankActivity({ transactions, transfers }) {
         </div>
         {transactions?.map((transaction) => (
           <Link to={`/transactions/${transaction.id}`}>
-            <TransactionRow transaction={transaction}/>
+            <TransactionRow transaction={transaction} />
           </Link>
         ))}
       </div>
@@ -37,24 +37,28 @@ export default function BankActivity({ transactions, transfers }) {
 }
 
 export function TransactionRow({ transaction = {} }) {
+
+  let navigate = useNavigate()
+
   return (
-    <div className="table-row transaction-row" key={transaction.postedAt}>
-      <span className="col x4" >
-        <Arrow amount={transaction.amount} />
-        {transaction.description}
-      </span>
-      <span className="col x2">{transaction.category}</span>
-      <span className="col x2">{formatAmount(transaction.amount)}</span>
-      <span className="col x15">{formatDate(transaction.postedAt)}</span>
+    <div className="table-row transaction-row" key={transaction.id} onClick={() => navigate(`/transactions/${transaction.id}`) }>
+   
+        <span className="col x4">
+          <Arrow amount={transaction.amount} />
+          {transaction.description}
+        </span>
+        <span className="col x2">{transaction.category}</span>
+        <span className="col x2">{formatAmount(transaction.amount)}</span>
+        <span className="col x15">{formatDate(transaction.postedAt)}</span>
+    
     </div>
   );
 }
 
 export function TransferRow({ transfer = {} }) {
   return (
-    <div className="table-row transfer-row" key={transfer.postedAt}>
- 
-      <span className="col x4" >
+    <div className="table-row transfer-row" key={transfer.id}>
+      <span className="col x4">
         <Arrow amount={transfer.amount} />
         {transfer.memo}
       </span>
