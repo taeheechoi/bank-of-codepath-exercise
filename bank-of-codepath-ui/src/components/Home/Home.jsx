@@ -19,6 +19,7 @@ export default function Home({
   newTransactionForm,
   setNewTransactionForm,
 }) {
+  
   const filteredTransactions = transactions?.filter((trans) =>
     filterInputValue.length
       ? trans.description
@@ -40,7 +41,7 @@ export default function Home({
       const response = await axios.get(
         "http://localhost:3001/bank/transactions"
       );
-
+      console.log('transactions', response.data.transactions)
       setTransactions(response.data.transactions);
     } catch (err) {
       setError(err.message);
@@ -59,6 +60,7 @@ export default function Home({
   };
 
   const handleOnCreateTransaction = async () => {
+    
     setIsCreating(true);
     try {
       const response = await axios.post(
@@ -69,13 +71,18 @@ export default function Home({
           },
         }
       );
-
-      await setTransactions([...transactions, response.data.transaction]);
+      
+      await setTransactions([...transactions, {...response.data.transaction}]);
+      
+      
+      
     } catch (err) {
       setError(err.message);
+      setIsCreating(false);
     }
-    setIsCreating(false);
+    
     setNewTransactionForm({ category: "", description: "", amount: 0 });
+    setIsCreating(false);
   };
 
   React.useEffect(() => {
